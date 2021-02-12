@@ -1,0 +1,59 @@
+他就是基于二价反转线的方块线
+
+C,NODRAW;
+VARU:=C>REF(C,1) AND C>REF(C,2);
+VARD:=C<REF(C,1) AND C<REF(C,2);
+
+TT:=NOT(VARD)&&NOT(VARU),NODRAW,COLORC0C0C0; {开始横}
+TT1:=BARSLAST(TT=0),NODRAW; {累计横次数}
+TTU:=REF(VARU,TT1); {TT1>0&&TTU = UU}
+TTD:=REF(VARD,TT1); {TT1>0&&TTD = DD}
+UU:TT1>0&&TTU,NODRAW; {红横}
+DD:TT1>0&&TTD,NODRAW; {蓝横}
+
+F3:=(VARU<>REF(VARU,1)||VARD<>REF(VARD,1))&&VARD<>VARU; {另类F3}
+F4:IF(F3=0&&REF(F3>0,TT1),TT1+REF(BARSLAST(F3=0),TT1),BARSLAST(F3=0)),COLORWHITE,NODRAW; {不依赖F4}
+VUP:=REF(VARU||UU,F4),NODRAW; {连震开头前}
+VDN:=REF(VARD||DD,F4),NODRAW; {连震开头前}
+VUP1:=REF(UU,F4),NODRAW; {任何状态的开头前一个涨}
+VDN1:=REF(DD,F4),NODRAW; {任何状态的开头前一个跌}
+
+...
+{排除}
+EX0:=REF(ZZ,F4)=REF(ZZ,F4-1); {第一破跟前面柱子方向一样}
+EX1:=(VARU||VARD)&&REF(DCF2&&TT,1)&&ZZ=REF(ZZ,1); {反转前面有彩色UU/DD 无需补色} {纯色}
+EX2:=REF(DCF2,1)&&ZZ<>REF(ZZ,1); {反转前面有彩色UU/DD 需补色}
+EX4:=(REF(UU,1)&&VARU&&FU)||(REF(DD,1)&&VARD&&FB);
+EX5:=(VARU&&REF(UU&&DCF2=0&&UU3B=0,1)&&EX0)||(VARD&&REF(DD&&DCF2=0&&DD3B=0,1)&&EX0); {前同色横 同向破}
+
+AC1:=REF(UU3&&DCF2=0&&FF1<FJ2,1)&&VARU; {补色规则 反色UU+VARU 补蓝色}
+AC2:=REF(DD3&&DCF2=0&&FF2>FJ2,1)&&VARD;
+
+varu就是涨 毫无疑问是反转
+vard是跌
+uu / dd 是涨后面横着 跌后面横了几个 (就是反转后面非反转的)
+f4是连续震动的(连续上下反转)
+ex1和ex2是比较特殊的情况 无论是开始 还是中途都需要判断的
+
+8
+7
+6
+5     x
+4 x x x
+3 x x x
+2 x
+1
+
+如果价格从2-4 往上走 返回的话往下走 再往上就往上走 类似上图
+
+8
+7
+6
+5     
+4 x x u
+3 x x x
+2 x d x
+1
+
+234 32 34
+这样的话在d处要分色 因为有二价反转(穿破2) 涨回去的时候u那里要分色
