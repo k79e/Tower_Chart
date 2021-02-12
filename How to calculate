@@ -2,6 +2,9 @@
 同方向移动2次 第二次的时候不补平头 见fig1 第7根红柱子
 https://raw.githubusercontent.com/k79e/Tower_Chart/main/fig1%202021-02-12_152706.png
 
+要判断横着的小方块(非突破价格柱)是否是彩色的 后面ex1 ex2要用
+从非突破到突破 如果突破和前面非突破都是同方向移动 则这个突破不补平头 否则要补
+
 C,NODRAW;
 VARU:=C>REF(C,1) AND C>REF(C,2);
 VARD:=C<REF(C,1) AND C<REF(C,2);
