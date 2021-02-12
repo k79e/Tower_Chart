@@ -1,4 +1,6 @@
 他就是基于二价反转线的方块线
+同方向移动2次 第二次的时候不补平头 见fig1 第7根红柱子
+https://github.com/k79e/Tower_Chart/blob/main/fig1%202021-02-12_152706.png
 
 C,NODRAW;
 VARU:=C>REF(C,1) AND C>REF(C,2);
